@@ -1,0 +1,346 @@
+{
+  "metadata": {
+    "description": "Phonetic sounds that don't exist in Portuguese or are commonly mispronounced",
+    "total_sounds": 15,
+    "note": "Focus on sounds problematic for Portuguese speakers"
+  },
+  "sounds": [
+    {
+      "id": "sound_001",
+      "phoneme": "θ",
+      "ipa": "θ",
+      "name": "voiceless dental fricative",
+      "exists_in_portuguese": false,
+      "difficulty": "high",
+      "mouth_position": {
+        "tongue": "Place tongue tip gently between upper and lower teeth",
+        "lips": "Slightly open, relaxed, not rounded",
+        "teeth": "Slightly apart, tongue visible between them",
+        "airflow": "Continuous air flowing through the gap between tongue and teeth",
+        "voicing": "No vocal cord vibration - voiceless"
+      },
+      "example_words": ["think", "math", "birthday", "three", "thick", "tooth", "throw"],
+      "minimal_pairs": [
+        {"target": "think", "contrast": "sink", "difference": "θ vs s"},
+        {"target": "thick", "contrast": "tick", "difference": "θ vs t"},
+        {"target": "math", "contrast": "mass", "difference": "θ vs s"},
+        {"target": "three", "contrast": "tree", "difference": "θ vs t"}
+      ],
+      "common_mistake": "Portuguese speakers often substitute /s/, /t/, or /f/ for this sound",
+      "portuguese_similar": null,
+      "tip": "Feel the air passing over your tongue tip. Your tongue should be visible between your teeth. Practice in front of a mirror."
+    },
+    {
+      "id": "sound_002",
+      "phoneme": "ð",
+      "ipa": "ð",
+      "name": "voiced dental fricative",
+      "exists_in_portuguese": false,
+      "difficulty": "high",
+      "mouth_position": {
+        "tongue": "Place tongue tip gently between upper and lower teeth",
+        "lips": "Slightly open, relaxed",
+        "teeth": "Slightly apart",
+        "airflow": "Continuous air while vibrating vocal cords",
+        "voicing": "Vocal cords vibrate - voiced"
+      },
+      "example_words": ["this", "that", "the", "mother", "father", "brother", "weather", "together"],
+      "minimal_pairs": [
+        {"target": "they", "contrast": "day", "difference": "ð vs d"},
+        {"target": "then", "contrast": "den", "difference": "ð vs d"},
+        {"target": "breathe", "contrast": "breeze", "difference": "ð vs z"}
+      ],
+      "common_mistake": "Portuguese speakers often substitute /d/ or /z/ for this sound",
+      "portuguese_similar": null,
+      "tip": "Same position as /θ/ but ADD VOICE. Put your hand on your throat - you should feel vibration."
+    },
+    {
+      "id": "sound_003",
+      "phoneme": "æ",
+      "ipa": "æ",
+      "name": "near-open front unrounded vowel",
+      "exists_in_portuguese": false,
+      "difficulty": "medium",
+      "mouth_position": {
+        "tongue": "Low and pushed forward",
+        "lips": "Spread slightly, not rounded",
+        "teeth": "Visible, mouth open wide",
+        "jaw": "Dropped down, open position",
+        "airflow": "Open vowel sound"
+      },
+      "example_words": ["cat", "bad", "man", "have", "black", "happy", "apple", "map"],
+      "minimal_pairs": [
+        {"target": "bad", "contrast": "bed", "difference": "æ vs e"},
+        {"target": "man", "contrast": "men", "difference": "æ vs e"},
+        {"target": "hat", "contrast": "hot", "difference": "æ vs ɒ"},
+        {"target": "pat", "contrast": "pet", "difference": "æ vs e"}
+      ],
+      "common_mistake": "Portuguese speakers often use /ɛ/ (like 'bed') or /a/ (like 'car')",
+      "portuguese_similar": "Between 'é' and 'a'",
+      "tip": "Open your mouth WIDER than for Portuguese 'é'. Say 'eh' but drop your jaw more."
+    },
+    {
+      "id": "sound_004",
+      "phoneme": "ɪ",
+      "ipa": "ɪ",
+      "name": "near-close front unrounded vowel",
+      "exists_in_portuguese": false,
+      "difficulty": "medium",
+      "mouth_position": {
+        "tongue": "High and front, but relaxed (not as high as /i/)",
+        "lips": "Slightly spread, relaxed",
+        "teeth": "Close together but not touching"
+      },
+      "example_words": ["bit", "sit", "fish", "quick", "thin", "ship", "live", "give"],
+      "minimal_pairs": [
+        {"target": "ship", "contrast": "sheep", "difference": "ɪ vs iː"},
+        {"target": "bit", "contrast": "beat", "difference": "ɪ vs iː"},
+        {"target": "sit", "contrast": "seat", "difference": "ɪ vs iː"},
+        {"target": "live", "contrast": "leave", "difference": "ɪ vs iː"}
+      ],
+      "common_mistake": "Portuguese speakers often use /i/ (like 'see') making 'ship' sound like 'sheep'",
+      "portuguese_similar": "Shorter and more relaxed than Portuguese 'i'",
+      "tip": "Relax your tongue and make it SHORTER than Portuguese 'i'. Don't smile as much."
+    },
+    {
+      "id": "sound_005",
+      "phoneme": "ʊ",
+      "ipa": "ʊ",
+      "name": "near-close back rounded vowel",
+      "exists_in_portuguese": false,
+      "difficulty": "medium",
+      "mouth_position": {
+        "tongue": "High and back, but relaxed",
+        "lips": "Slightly rounded, relaxed",
+        "teeth": "Close but not touching"
+      },
+      "example_words": ["book", "good", "put", "could", "look", "foot", "wood", "full"],
+      "minimal_pairs": [
+        {"target": "full", "contrast": "fool", "difference": "ʊ vs uː"},
+        {"target": "look", "contrast": "Luke", "difference": "ʊ vs uː"},
+        {"target": "pull", "contrast": "pool", "difference": "ʊ vs uː"}
+      ],
+      "common_mistake": "Portuguese speakers often use /u/ (like 'food') making 'book' sound like 'buke'",
+      "portuguese_similar": "Shorter and more relaxed than Portuguese 'u'",
+      "tip": "Relax your lips and make it SHORTER than Portuguese 'u'. Less lip rounding."
+    },
+    {
+      "id": "sound_006",
+      "phoneme": "ɹ",
+      "ipa": "ɹ",
+      "name": "alveolar approximant (American R)",
+      "exists_in_portuguese": false,
+      "difficulty": "high",
+      "mouth_position": {
+        "tongue": "Curl back slightly (retroflex) without touching roof of mouth",
+        "lips": "Slightly rounded",
+        "teeth": "Slightly apart",
+        "airflow": "Continuous, tongue doesn't touch anything"
+      },
+      "example_words": ["red", "right", "car", "water", "very", "around", "rain", "green"],
+      "minimal_pairs": [
+        {"target": "right", "contrast": "light", "difference": "ɹ vs l"},
+        {"target": "red", "contrast": "led", "difference": "ɹ vs l"},
+        {"target": "grow", "contrast": "glow", "difference": "ɹ vs l"}
+      ],
+      "common_mistake": "Portuguese speakers may use rolled R, tap R, or guttural R",
+      "portuguese_similar": null,
+      "tip": "The tongue NEVER touches the roof of the mouth. Curl your tongue back but keep it floating."
+    },
+    {
+      "id": "sound_007",
+      "phoneme": "ŋ",
+      "ipa": "ŋ",
+      "name": "velar nasal",
+      "exists_in_portuguese": false,
+      "difficulty": "medium",
+      "mouth_position": {
+        "tongue": "Back of tongue touches soft palate (velum)",
+        "lips": "Relaxed, mouth slightly open",
+        "airflow": "Through the nose only"
+      },
+      "example_words": ["sing", "thing", "going", "running", "ring", "king", "young", "long"],
+      "minimal_pairs": [
+        {"target": "sin", "contrast": "sing", "difference": "n vs ŋ"},
+        {"target": "ran", "contrast": "rang", "difference": "n vs ŋ"},
+        {"target": "thin", "contrast": "thing", "difference": "n vs ŋ"}
+      ],
+      "common_mistake": "Adding /g/ after the sound: 'sing-g' or substituting /n/",
+      "portuguese_similar": "Similar to 'nh' but further back in the mouth",
+      "tip": "Feel the back of your tongue touch the soft palate. Don't add a /g/ at the end!"
+    },
+    {
+      "id": "sound_008",
+      "phoneme": "h",
+      "ipa": "h",
+      "name": "voiceless glottal fricative",
+      "exists_in_portuguese": false,
+      "difficulty": "medium",
+      "mouth_position": {
+        "tongue": "In position for following vowel",
+        "lips": "In position for following vowel",
+        "teeth": "Relaxed, open",
+        "airflow": "Strong burst of air from throat"
+      },
+      "example_words": ["hat", "hello", "house", "help", "happy", "hot", "here", "how"],
+      "minimal_pairs": [
+        {"target": "heat", "contrast": "eat", "difference": "h vs ∅"},
+        {"target": "hair", "contrast": "air", "difference": "h vs ∅"},
+        {"target": "hat", "contrast": "at", "difference": "h vs ∅"}
+      ],
+      "common_mistake": "Portuguese speakers may skip the /h/ entirely or use /r/",
+      "portuguese_similar": "Like the 'r' aspirado in some Brazilian dialects",
+      "tip": "Breathe out strongly like fogging up a mirror. It's just air, no friction in the mouth."
+    },
+    {
+      "id": "sound_009",
+      "phoneme": "w",
+      "ipa": "w",
+      "name": "labio-velar approximant",
+      "exists_in_portuguese": false,
+      "difficulty": "low",
+      "mouth_position": {
+        "tongue": "High and back (like /u/)",
+        "lips": "Rounded, protruding slightly",
+        "airflow": "Voice glides into following vowel"
+      },
+      "example_words": ["water", "want", "well", "with", "away", "sweet", "between"],
+      "minimal_pairs": [
+        {"target": "west", "contrast": "vest", "difference": "w vs v"},
+        {"target": "wine", "contrast": "vine", "difference": "w vs v"},
+        {"target": "wet", "contrast": "vet", "difference": "w vs v"}
+      ],
+      "common_mistake": "Portuguese speakers often use /v/ instead of /w/",
+      "portuguese_similar": "Like saying 'u' very quickly before a vowel",
+      "tip": "Round your lips like saying 'oo' and then glide into the next vowel. NO teeth contact!"
+    },
+    {
+      "id": "sound_010",
+      "phoneme": "ʤ",
+      "ipa": "dʒ",
+      "name": "voiced postalveolar affricate",
+      "exists_in_portuguese": true,
+      "difficulty": "low",
+      "mouth_position": {
+        "tongue": "Starts touching roof of mouth behind alveolar ridge, then releases",
+        "lips": "Slightly rounded and protruding",
+        "voicing": "Voiced"
+      },
+      "example_words": ["job", "age", "judge", "general", "June", "just", "bridge"],
+      "minimal_pairs": [
+        {"target": "Jew", "contrast": "zoo", "difference": "dʒ vs z"},
+        {"target": "gin", "contrast": "chin", "difference": "dʒ vs tʃ"},
+        {"target": "jeer", "contrast": "cheer", "difference": "dʒ vs tʃ"}
+      ],
+      "common_mistake": "May be confused with /tʃ/ (unvoiced) or pronounced too softly",
+      "portuguese_similar": "Like 'dj' in 'dia' (Rio accent) or 'gi' in some dialects",
+      "tip": "Like 'ch' in 'church' but WITH voice. Feel your throat vibrate."
+    },
+    {
+      "id": "sound_011",
+      "phoneme": "ʧ",
+      "ipa": "tʃ",
+      "name": "voiceless postalveolar affricate",
+      "exists_in_portuguese": true,
+      "difficulty": "low",
+      "mouth_position": {
+        "tongue": "Starts touching roof of mouth behind alveolar ridge, then releases",
+        "lips": "Slightly rounded and protruding",
+        "voicing": "Voiceless"
+      },
+      "example_words": ["church", "cheese", "child", "watch", "match", "teacher"],
+      "minimal_pairs": [
+        {"target": "chin", "contrast": "gin", "difference": "tʃ vs dʒ"},
+        {"target": "cheer", "contrast": "jeer", "difference": "tʃ vs dʒ"},
+        {"target": "cheap", "contrast": "jeep", "difference": "tʃ vs dʒ"}
+      ],
+      "common_mistake": "May be confused with /ʃ/ (sh) or /dʒ/ (j)",
+      "portuguese_similar": "Like 'tch' in 'tchau' or 'ti' in 'tia' (some dialects)",
+      "tip": "Like 'j' in 'job' but WITHOUT voice. No throat vibration."
+    },
+    {
+      "id": "sound_012",
+      "phoneme": "ə",
+      "ipa": "ə",
+      "name": "schwa (mid central vowel)",
+      "exists_in_portuguese": true,
+      "difficulty": "medium",
+      "mouth_position": {
+        "tongue": "Relaxed, central position",
+        "lips": "Relaxed, neutral",
+        "jaw": "Slightly open"
+      },
+      "example_words": ["about", "banana", "sofa", "taken", "problem", "album"],
+      "minimal_pairs": [
+        {"target": "affect", "contrast": "effect", "difference": "æ vs ə in stressed vs unstressed"}
+      ],
+      "common_mistake": "Pronouncing unstressed vowels too clearly instead of reducing to schwa",
+      "portuguese_similar": "Like the 'e' in unstressed 'de' or 'que'",
+      "tip": "The MOST common vowel in English! It's weak, short, and in UNSTRESSED syllables."
+    },
+    {
+      "id": "sound_013",
+      "phoneme": "ʃ",
+      "ipa": "ʃ",
+      "name": "voiceless postalveolar fricative",
+      "exists_in_portuguese": true,
+      "difficulty": "low",
+      "mouth_position": {
+        "tongue": "Raised toward palate, creating narrow channel",
+        "lips": "Rounded, protruding",
+        "airflow": "Continuous friction"
+      },
+      "example_words": ["she", "ship", "fish", "wash", "nation", "special", "sure"],
+      "minimal_pairs": [
+        {"target": "ship", "contrast": "sip", "difference": "ʃ vs s"},
+        {"target": "she", "contrast": "see", "difference": "ʃ vs s"},
+        {"target": "wash", "contrast": "was", "difference": "ʃ vs s"}
+      ],
+      "common_mistake": "Confusing with /s/ or not rounding lips enough",
+      "portuguese_similar": "Like 'ch' in 'chá' or 'x' in 'xícara'",
+      "tip": "Like telling someone to be quiet: 'shhh!' Round your lips."
+    },
+    {
+      "id": "sound_014",
+      "phoneme": "ʒ",
+      "ipa": "ʒ",
+      "name": "voiced postalveolar fricative",
+      "exists_in_portuguese": true,
+      "difficulty": "low",
+      "mouth_position": {
+        "tongue": "Raised toward palate, creating narrow channel",
+        "lips": "Rounded, protruding",
+        "voicing": "Voiced"
+      },
+      "example_words": ["vision", "measure", "pleasure", "usual", "beige", "garage"],
+      "minimal_pairs": [
+        {"target": "vision", "contrast": "fission", "difference": "ʒ vs ʃ"}
+      ],
+      "common_mistake": "Using /dʒ/ instead of pure /ʒ/",
+      "portuguese_similar": "Like 'j' in 'janela' or 'g' in 'gelo'",
+      "tip": "Like /ʃ/ but ADD voice. Feel your throat vibrate."
+    },
+    {
+      "id": "sound_015",
+      "phoneme": "eɪ",
+      "ipa": "eɪ",
+      "name": "diphthong (close-mid front to near-close front)",
+      "exists_in_portuguese": true,
+      "difficulty": "medium",
+      "mouth_position": {
+        "tongue": "Starts mid-front, glides higher and fronter",
+        "lips": "Spread, tense",
+        "movement": "Glide from /e/ toward /ɪ/"
+      },
+      "example_words": ["day", "say", "make", "take", "great", "they", "eight"],
+      "minimal_pairs": [
+        {"target": "wait", "contrast": "wet", "difference": "eɪ vs e"},
+        {"target": "late", "contrast": "let", "difference": "eɪ vs e"},
+        {"target": "taste", "contrast": "test", "difference": "eɪ vs e"}
+      ],
+      "common_mistake": "Not gliding - saying pure /e/ instead of the diphthong",
+      "portuguese_similar": "Like 'ei' in 'lei' but starts more open",
+      "tip": "START with mouth more open than Portuguese 'e', then glide to 'i' sound."
+    }
+  ]
+}
