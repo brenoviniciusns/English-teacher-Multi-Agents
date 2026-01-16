@@ -97,11 +97,13 @@ async def health_check():
     return JSONResponse(content=health_status)
 
 
-# TODO: Include routers
-# from app.api.v1.endpoints import users, assessment, vocabulary, grammar, pronunciation, speaking, progress
+# Include routers
+from app.api.v1.endpoints import vocabulary
+# TODO: Uncomment as endpoints are implemented
+# from app.api.v1.endpoints import users, assessment, grammar, pronunciation, speaking, progress
 # app.include_router(users.router, prefix=f"{settings.API_V1_PREFIX}/users", tags=["users"])
 # app.include_router(assessment.router, prefix=f"{settings.API_V1_PREFIX}/assessment", tags=["assessment"])
-# app.include_router(vocabulary.router, prefix=f"{settings.API_V1_PREFIX}/vocabulary", tags=["vocabulary"])
+app.include_router(vocabulary.router, prefix=f"{settings.API_V1_PREFIX}/vocabulary", tags=["vocabulary"])
 # app.include_router(grammar.router, prefix=f"{settings.API_V1_PREFIX}/grammar", tags=["grammar"])
 # app.include_router(pronunciation.router, prefix=f"{settings.API_V1_PREFIX}/pronunciation", tags=["pronunciation"])
 # app.include_router(speaking.router, prefix=f"{settings.API_V1_PREFIX}/speaking", tags=["speaking"])

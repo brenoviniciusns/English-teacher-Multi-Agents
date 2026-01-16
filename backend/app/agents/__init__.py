@@ -60,6 +60,12 @@ from app.agents.progress_agent import (
     progress_agent
 )
 
+# Pillar agents (Phase 4+)
+from app.agents.vocabulary_agent import (
+    VocabularyAgent,
+    vocabulary_agent
+)
+
 # Orchestrator
 from app.agents.orchestrator import (
     Orchestrator,
@@ -91,7 +97,7 @@ __all__ = [
     "add_agent_message",
     "get_pillar_from_request_type",
 
-    # Agents
+    # Core Agents
     "AssessmentAgent",
     "assessment_agent",
     "SchedulerAgent",
@@ -100,6 +106,10 @@ __all__ = [
     "progress_agent",
     "Orchestrator",
     "orchestrator",
+
+    # Pillar Agents
+    "VocabularyAgent",
+    "vocabulary_agent",
 
     # Convenience functions
     "run_orchestrator"

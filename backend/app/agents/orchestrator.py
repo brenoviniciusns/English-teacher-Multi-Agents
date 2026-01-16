@@ -25,6 +25,7 @@ from app.agents.state import (
 from app.agents.assessment_agent import assessment_agent
 from app.agents.scheduler_agent import scheduler_agent
 from app.agents.progress_agent import progress_agent
+from app.agents.vocabulary_agent import vocabulary_agent
 from app.config import Settings, get_settings
 from app.services.cosmos_db_service import cosmos_db_service
 
@@ -305,21 +306,13 @@ class Orchestrator(BaseAgent[AppState]):
 
     async def _vocabulary_node(self, state: AppState) -> AppState:
         """
-        Vocabulary agent node (placeholder for Phase 4).
+        Vocabulary agent node.
 
-        Will be fully implemented in the Vocabulary Pillar phase.
+        Handles vocabulary exercises through the VocabularyAgent.
+        Supports exercise generation and answer processing.
         """
         self.log_debug("Vocabulary node processing")
-
-        # Placeholder response
-        state["response"] = {
-            "type": "vocabulary_exercise",
-            "status": "not_implemented",
-            "message": "Vocabulary agent will be implemented in Phase 4"
-        }
-        state["is_complete"] = True
-
-        return state
+        return await vocabulary_agent.process(state)
 
     async def _grammar_node(self, state: AppState) -> AppState:
         """
