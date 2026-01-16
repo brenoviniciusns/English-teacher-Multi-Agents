@@ -364,7 +364,7 @@ class CosmosDBService:
     async def get_pronunciation_needs_practice(
         self,
         user_id: str,
-        accuracy_threshold: int = 80
+        threshold: int = 80
     ) -> list:
         """Get pronunciation sounds that need more practice."""
         query = """
@@ -374,7 +374,35 @@ class CosmosDBService:
         """
         parameters = [
             {"name": "@user_id", "value": user_id},
-            {"name": "@threshold", "value": accuracy_threshold}
+            {"name": "@threshold", "value": threshold}
+        ]
+        return await self.query_items("pronunciation_progress", query, parameters, user_id)
+
+    async def get_pronunciation_due_for_review(self, user_id: str) -> list:
+        """Get pronunciation sounds due for SRS review."""
+        today = datetime.utcnow().isoformat()
+        query = """
+            SELECT * FROM c
+            WHERE c.partitionKey = @user_id
+            AND c.srsData.nextReview <= @today
+        """
+        parameters = [
+            {"name": "@user_id", "value": user_id},
+            {"name": "@today", "value": today}
+        ]
+        return await self.query_items("pronunciation_progress", query, parameters, user_id)
+
+    async def get_pronunciation_low_frequency(self, user_id: str, days: int = 7) -> list:
+        """Get pronunciation sounds not practiced in the last N days."""
+        threshold = (datetime.utcnow() - timedelta(days=days)).isoformat()
+        query = """
+            SELECT * FROM c
+            WHERE c.partitionKey = @user_id
+            AND (c.lastPracticed < @threshold OR NOT IS_DEFINED(c.lastPracticed))
+        """
+        parameters = [
+            {"name": "@user_id", "value": user_id},
+            {"name": "@threshold", "value": threshold}
         ]
         return await self.query_items("pronunciation_progress", query, parameters, user_id)
 

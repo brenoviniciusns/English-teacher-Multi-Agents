@@ -1,0 +1,265 @@
+{
+  "topics": [
+    {
+      "id": "daily_routine",
+      "name": "Daily Routine",
+      "name_pt": "Rotina Diária",
+      "description": "Talk about your typical day, morning habits, work schedule, and evening activities.",
+      "description_pt": "Fale sobre seu dia típico, hábitos matinais, agenda de trabalho e atividades noturnas.",
+      "difficulty": "beginner",
+      "category": "lifestyle",
+      "sample_questions": [
+        "What time do you usually wake up?",
+        "What do you have for breakfast?",
+        "How do you get to work?",
+        "What do you do after work?"
+      ],
+      "vocabulary_hints": ["wake up", "breakfast", "commute", "routine", "schedule"],
+      "grammar_focus": ["simple_present", "adverbs_of_frequency"],
+      "opening_prompts": [
+        "Hi! Let's talk about daily routines. What time do you usually wake up in the morning?",
+        "Good to see you! I'd like to know about your typical day. Can you tell me what you do in the morning?"
+      ]
+    },
+    {
+      "id": "weekend_plans",
+      "name": "Weekend Plans",
+      "name_pt": "Planos para o Fim de Semana",
+      "description": "Discuss your weekend activities, hobbies, and plans for relaxation.",
+      "description_pt": "Discuta suas atividades de fim de semana, hobbies e planos para relaxar.",
+      "difficulty": "beginner",
+      "category": "lifestyle",
+      "sample_questions": [
+        "What do you like to do on weekends?",
+        "Did you do anything fun last weekend?",
+        "What are your plans for this weekend?",
+        "Do you prefer staying home or going out?"
+      ],
+      "vocabulary_hints": ["weekend", "relax", "hobbies", "fun", "plans"],
+      "grammar_focus": ["simple_past", "future_going_to", "present_continuous_future"],
+      "opening_prompts": [
+        "Hey! The weekend is coming up. What do you usually like to do on weekends?",
+        "Hi there! Let's chat about weekends. Do you have any plans for this weekend?"
+      ]
+    },
+    {
+      "id": "food_and_cooking",
+      "name": "Food and Cooking",
+      "name_pt": "Comida e Culinária",
+      "description": "Discuss your favorite foods, cooking habits, and restaurant experiences.",
+      "description_pt": "Discuta suas comidas favoritas, hábitos culinários e experiências em restaurantes.",
+      "difficulty": "beginner",
+      "category": "lifestyle",
+      "sample_questions": [
+        "What's your favorite food?",
+        "Do you like cooking?",
+        "What did you eat for lunch today?",
+        "Have you tried any new restaurants lately?"
+      ],
+      "vocabulary_hints": ["cook", "recipe", "delicious", "ingredients", "meal"],
+      "grammar_focus": ["countable_uncountable", "simple_past", "present_perfect"],
+      "opening_prompts": [
+        "Hello! I love talking about food. What's your favorite dish to eat?",
+        "Hi! Let's discuss food and cooking. Do you enjoy cooking at home?"
+      ]
+    },
+    {
+      "id": "travel_experiences",
+      "name": "Travel Experiences",
+      "name_pt": "Experiências de Viagem",
+      "description": "Share stories about trips you've taken or places you'd like to visit.",
+      "description_pt": "Compartilhe histórias sobre viagens que você fez ou lugares que gostaria de visitar.",
+      "difficulty": "intermediate",
+      "category": "experiences",
+      "sample_questions": [
+        "Have you ever traveled abroad?",
+        "What's the most beautiful place you've visited?",
+        "Where would you like to go next?",
+        "Do you prefer beach or mountain vacations?"
+      ],
+      "vocabulary_hints": ["travel", "destination", "sightseeing", "culture", "adventure"],
+      "grammar_focus": ["present_perfect", "past_continuous", "conditionals_second"],
+      "opening_prompts": [
+        "Hi! I'd love to hear about your travel experiences. Have you ever been to another country?",
+        "Hey there! Let's talk about traveling. What's the most interesting place you've visited?"
+      ]
+    },
+    {
+      "id": "work_and_career",
+      "name": "Work and Career",
+      "name_pt": "Trabalho e Carreira",
+      "description": "Discuss your job, career goals, workplace experiences, and professional development.",
+      "description_pt": "Discuta seu trabalho, objetivos de carreira, experiências profissionais e desenvolvimento.",
+      "difficulty": "intermediate",
+      "category": "professional",
+      "sample_questions": [
+        "What do you do for a living?",
+        "How long have you been in your current role?",
+        "What do you like most about your job?",
+        "Where do you see yourself in five years?"
+      ],
+      "vocabulary_hints": ["career", "promotion", "skills", "responsibilities", "goals"],
+      "grammar_focus": ["present_perfect_continuous", "future_will", "conditionals_first"],
+      "opening_prompts": [
+        "Hi! Let's talk about work. Can you tell me what you do for a living?",
+        "Hello! I'm curious about your career. How long have you been working in your field?"
+      ]
+    },
+    {
+      "id": "technology",
+      "name": "Technology",
+      "name_pt": "Tecnologia",
+      "description": "Discuss technology, gadgets, apps, and how technology affects daily life.",
+      "description_pt": "Discuta tecnologia, gadgets, aplicativos e como a tecnologia afeta o dia a dia.",
+      "difficulty": "intermediate",
+      "category": "technology",
+      "sample_questions": [
+        "What apps do you use the most?",
+        "Do you think technology makes life better?",
+        "Have you tried any new gadgets recently?",
+        "What do you think about artificial intelligence?"
+      ],
+      "vocabulary_hints": ["device", "software", "app", "innovation", "digital"],
+      "grammar_focus": ["passive_voice", "present_perfect", "conditionals_second"],
+      "opening_prompts": [
+        "Hey! Technology is everywhere these days. What's your favorite app or device?",
+        "Hi! Let's chat about technology. How has technology changed your daily routine?"
+      ]
+    },
+    {
+      "id": "data_engineering",
+      "name": "Data Engineering",
+      "name_pt": "Engenharia de Dados",
+      "description": "Discuss data pipelines, databases, ETL processes, and data architecture.",
+      "description_pt": "Discuta pipelines de dados, bancos de dados, processos ETL e arquitetura de dados.",
+      "difficulty": "intermediate",
+      "category": "technical",
+      "sample_questions": [
+        "What databases do you work with?",
+        "How do you handle data quality issues?",
+        "What tools do you use for ETL?",
+        "Can you explain your data pipeline architecture?"
+      ],
+      "vocabulary_hints": ["pipeline", "database", "ETL", "schema", "transformation"],
+      "grammar_focus": ["passive_voice", "present_simple_technical", "conditionals"],
+      "opening_prompts": [
+        "Hi! As a data professional, what kind of data infrastructure do you work with?",
+        "Hello! Let's discuss data engineering. What's the biggest data challenge you've faced?"
+      ]
+    },
+    {
+      "id": "artificial_intelligence",
+      "name": "Artificial Intelligence",
+      "name_pt": "Inteligência Artificial",
+      "description": "Discuss AI, machine learning, neural networks, and the future of AI technology.",
+      "description_pt": "Discuta IA, aprendizado de máquina, redes neurais e o futuro da tecnologia de IA.",
+      "difficulty": "intermediate",
+      "category": "technical",
+      "sample_questions": [
+        "What aspects of AI interest you the most?",
+        "Have you worked with any machine learning models?",
+        "What do you think about ChatGPT and similar tools?",
+        "How do you see AI changing your industry?"
+      ],
+      "vocabulary_hints": ["model", "training", "neural network", "algorithm", "prediction"],
+      "grammar_focus": ["future_will", "present_perfect", "passive_voice"],
+      "opening_prompts": [
+        "Hi! AI is such a hot topic right now. What aspects of artificial intelligence interest you?",
+        "Hello! Let's discuss AI. Have you had any experience working with machine learning?"
+      ]
+    },
+    {
+      "id": "health_and_fitness",
+      "name": "Health and Fitness",
+      "name_pt": "Saúde e Fitness",
+      "description": "Discuss exercise routines, healthy habits, sports, and wellness goals.",
+      "description_pt": "Discuta rotinas de exercício, hábitos saudáveis, esportes e objetivos de bem-estar.",
+      "difficulty": "beginner",
+      "category": "lifestyle",
+      "sample_questions": [
+        "Do you exercise regularly?",
+        "What kind of sports do you enjoy?",
+        "How do you stay healthy?",
+        "Have you ever tried yoga or meditation?"
+      ],
+      "vocabulary_hints": ["exercise", "workout", "healthy", "diet", "fitness"],
+      "grammar_focus": ["simple_present", "present_continuous", "modal_should"],
+      "opening_prompts": [
+        "Hi! Let's talk about health. Do you have any exercise routine?",
+        "Hello! I'd like to discuss fitness. What do you do to stay healthy?"
+      ]
+    },
+    {
+      "id": "movies_and_entertainment",
+      "name": "Movies and Entertainment",
+      "name_pt": "Filmes e Entretenimento",
+      "description": "Discuss favorite movies, TV shows, streaming services, and entertainment preferences.",
+      "description_pt": "Discuta filmes favoritos, séries de TV, serviços de streaming e preferências de entretenimento.",
+      "difficulty": "beginner",
+      "category": "entertainment",
+      "sample_questions": [
+        "What's your favorite movie of all time?",
+        "Are you watching any good series right now?",
+        "Do you prefer movies or TV shows?",
+        "What genre do you enjoy the most?"
+      ],
+      "vocabulary_hints": ["movie", "series", "streaming", "plot", "character"],
+      "grammar_focus": ["simple_present", "present_continuous", "comparatives"],
+      "opening_prompts": [
+        "Hey! I love talking about entertainment. What's the last movie you watched?",
+        "Hi! Let's chat about movies and shows. Are you watching anything good on Netflix?"
+      ]
+    },
+    {
+      "id": "future_plans",
+      "name": "Future Plans and Goals",
+      "name_pt": "Planos Futuros e Objetivos",
+      "description": "Discuss your dreams, goals, aspirations, and plans for the future.",
+      "description_pt": "Discuta seus sonhos, metas, aspirações e planos para o futuro.",
+      "difficulty": "intermediate",
+      "category": "personal",
+      "sample_questions": [
+        "Where do you see yourself in 5 years?",
+        "What's your biggest dream?",
+        "Are you planning any major changes in your life?",
+        "What goals are you working towards right now?"
+      ],
+      "vocabulary_hints": ["goal", "dream", "plan", "achieve", "aspiration"],
+      "grammar_focus": ["future_will", "future_going_to", "conditionals_first"],
+      "opening_prompts": [
+        "Hi! Let's talk about the future. What are some goals you're working towards?",
+        "Hello! I'd love to hear about your plans. Where do you see yourself in a few years?"
+      ]
+    },
+    {
+      "id": "childhood_memories",
+      "name": "Childhood Memories",
+      "name_pt": "Memórias da Infância",
+      "description": "Share stories about growing up, childhood experiences, and nostalgic memories.",
+      "description_pt": "Compartilhe histórias sobre crescer, experiências de infância e memórias nostálgicas.",
+      "difficulty": "intermediate",
+      "category": "personal",
+      "sample_questions": [
+        "What's your earliest memory?",
+        "What did you want to be when you grew up?",
+        "Did you have any favorite toys or games?",
+        "What was school like for you?"
+      ],
+      "vocabulary_hints": ["childhood", "memory", "grow up", "remember", "used to"],
+      "grammar_focus": ["used_to", "past_continuous", "simple_past"],
+      "opening_prompts": [
+        "Hi! Let's take a trip down memory lane. What's one of your favorite childhood memories?",
+        "Hello! I'd love to hear about when you were young. What did you dream of becoming as a child?"
+      ]
+    }
+  ],
+  "categories": [
+    {"id": "lifestyle", "name": "Lifestyle", "name_pt": "Estilo de Vida"},
+    {"id": "experiences", "name": "Experiences", "name_pt": "Experiências"},
+    {"id": "professional", "name": "Professional", "name_pt": "Profissional"},
+    {"id": "technology", "name": "Technology", "name_pt": "Tecnologia"},
+    {"id": "technical", "name": "Technical", "name_pt": "Técnico"},
+    {"id": "entertainment", "name": "Entertainment", "name_pt": "Entretenimento"},
+    {"id": "personal", "name": "Personal", "name_pt": "Pessoal"}
+  ]
+}
