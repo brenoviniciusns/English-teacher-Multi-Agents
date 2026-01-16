@@ -26,6 +26,7 @@ from app.agents.assessment_agent import assessment_agent
 from app.agents.scheduler_agent import scheduler_agent
 from app.agents.progress_agent import progress_agent
 from app.agents.vocabulary_agent import vocabulary_agent
+from app.agents.grammar_agent import grammar_agent
 from app.config import Settings, get_settings
 from app.services.cosmos_db_service import cosmos_db_service
 
@@ -316,21 +317,13 @@ class Orchestrator(BaseAgent[AppState]):
 
     async def _grammar_node(self, state: AppState) -> AppState:
         """
-        Grammar agent node (placeholder for Phase 5).
+        Grammar agent node.
 
-        Will be fully implemented in the Grammar Pillar phase.
+        Handles grammar lessons and exercises through the GrammarAgent.
+        Supports lesson presentation, explanation evaluation, and exercises.
         """
         self.log_debug("Grammar node processing")
-
-        # Placeholder response
-        state["response"] = {
-            "type": "grammar_exercise",
-            "status": "not_implemented",
-            "message": "Grammar agent will be implemented in Phase 5"
-        }
-        state["is_complete"] = True
-
-        return state
+        return await grammar_agent.process(state)
 
     async def _pronunciation_node(self, state: AppState) -> AppState:
         """

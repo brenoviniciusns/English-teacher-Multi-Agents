@@ -318,6 +318,20 @@ class CosmosDBService:
         ]
         return await self.query_items("grammar_progress", query, parameters, user_id)
 
+    async def get_grammar_low_frequency(self, user_id: str, days: int = 7) -> list:
+        """Get grammar rules not practiced in the last N days."""
+        threshold = (datetime.utcnow() - timedelta(days=days)).isoformat()
+        query = """
+            SELECT * FROM c
+            WHERE c.partitionKey = @user_id
+            AND (c.lastPracticed < @threshold OR NOT IS_DEFINED(c.lastPracticed))
+        """
+        parameters = [
+            {"name": "@user_id", "value": user_id},
+            {"name": "@threshold", "value": threshold}
+        ]
+        return await self.query_items("grammar_progress", query, parameters, user_id)
+
     # ==================== PRONUNCIATION PROGRESS ====================
 
     async def get_pronunciation_progress(
