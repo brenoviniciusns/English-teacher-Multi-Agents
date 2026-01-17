@@ -65,6 +65,31 @@ class PronunciationAgent(BaseAgent[AppState]):
         self._sounds_cache: dict[str, dict] = {}
         self._sounds_by_difficulty: dict[str, list[dict]] = {}
 
+    def _is_sound_for_level(self, sound: dict, user_level: str) -> bool:
+        """
+        Check if a phonetic sound is appropriate for the user's level.
+
+        Level logic:
+        - Beginner: Only beginner sounds (individual phonemes, low/medium difficulty)
+        - Intermediate: Both beginner and intermediate sounds (includes connected speech)
+
+        Args:
+            sound: The phonetic sound dictionary
+            user_level: The user's current level ('beginner' or 'intermediate')
+
+        Returns:
+            True if the sound is appropriate for the user's level
+        """
+        sound_level_req = sound.get("level_requirement", "beginner")
+        sound_difficulty = sound.get("difficulty", "medium")
+
+        if user_level == "beginner":
+            # Beginners only see beginner content and not high difficulty
+            return sound_level_req == "beginner" and sound_difficulty != "high"
+        else:
+            # Intermediate users see both beginner and intermediate content
+            return sound_level_req in ["beginner", "intermediate"]
+
     @property
     def name(self) -> str:
         return "pronunciation"
@@ -509,7 +534,13 @@ class PronunciationAgent(BaseAgent[AppState]):
         level: str,
         difficulty: Optional[str] = None
     ) -> Optional[dict]:
-        """Get a new sound that the user hasn't studied yet."""
+        """
+        Get a new sound that the user hasn't studied yet.
+
+        Level-based filtering:
+        - Beginner: Individual phonemes, low/medium difficulty
+        - Intermediate: All sounds including connected speech patterns
+        """
         await self._load_sounds()
 
         # Get user's existing progress
@@ -522,43 +553,37 @@ class PronunciationAgent(BaseAgent[AppState]):
             if sound_id in studied_sound_ids:
                 continue
 
-            # Map level to difficulty
-            sound_difficulty = sound.get("difficulty", "medium")
-            if level == "beginner" and sound_difficulty == "high":
-                continue  # Skip hard sounds for beginners
-            if difficulty and sound_difficulty != difficulty:
+            # Use level-based filtering
+            if level != "all" and not self._is_sound_for_level(sound, level):
+                continue
+
+            # Filter by specific difficulty if requested
+            if difficulty and sound.get("difficulty") != difficulty:
                 continue
 
             available_sounds.append(sound)
 
         if not available_sounds:
-            # Try without level filter
-            available_sounds = [
-                s for s_id, s in self._sounds_cache.items()
-                if s_id not in studied_sound_ids
-                and (not difficulty or s.get("difficulty") == difficulty)
-            ]
-
-        if not available_sounds:
             return None
 
-        # Prioritize sounds that don't exist in Portuguese (harder but important)
-        # Start with easier sounds for beginners
-        available_sounds.sort(
-            key=lambda x: (
-                x.get("exists_in_portuguese", True),  # Non-Portuguese sounds first
-                {"low": 0, "medium": 1, "high": 2}.get(x.get("difficulty", "medium"), 1)
-            )
-        )
+        # Sorting priority based on user level
+        def sort_key(sound):
+            sound_level_req = sound.get("level_requirement", "beginner")
+            sound_difficulty = sound.get("difficulty", "medium")
+            difficulty_order = {"low": 0, "medium": 1, "high": 2}.get(sound_difficulty, 1)
 
-        # For beginners, start with easier sounds
-        if level == "beginner":
-            available_sounds.sort(
-                key=lambda x: (
-                    {"low": 0, "medium": 1, "high": 2}.get(x.get("difficulty", "medium"), 1),
-                    not x.get("exists_in_portuguese", True)
-                )
-            )
+            if level == "intermediate":
+                # For intermediate users, prioritize intermediate content first
+                level_priority = 0 if sound_level_req == "intermediate" else 1
+                # Then sort by: non-Portuguese sounds first (important for learning)
+                pt_priority = 0 if not sound.get("exists_in_portuguese", True) else 1
+                return (level_priority, pt_priority, difficulty_order)
+            else:
+                # For beginners: easier sounds first, Portuguese-similar sounds first
+                pt_priority = 0 if sound.get("exists_in_portuguese", True) else 1
+                return (difficulty_order, pt_priority, sound.get("name", ""))
+
+        available_sounds.sort(key=sort_key)
 
         return available_sounds[0]
 
@@ -567,16 +592,20 @@ class PronunciationAgent(BaseAgent[AppState]):
         level: str,
         difficulty: Optional[str] = None
     ) -> Optional[dict]:
-        """Get a random sound as fallback."""
+        """
+        Get a random sound as fallback.
+
+        Uses level-based filtering:
+        - Beginner: Only beginner sounds (individual phonemes)
+        - Intermediate: Both beginner and intermediate sounds
+        """
         await self._load_sounds()
 
-        sounds = list(self._sounds_cache.values())
-
-        if difficulty:
-            sounds = [s for s in sounds if s.get("difficulty") == difficulty]
-        elif level == "beginner":
-            # Filter out high difficulty for beginners
-            sounds = [s for s in sounds if s.get("difficulty") != "high"]
+        sounds = [
+            s for s in self._sounds_cache.values()
+            if (level == "all" or self._is_sound_for_level(s, level))
+            and (not difficulty or s.get("difficulty") == difficulty)
+        ]
 
         return random.choice(sounds) if sounds else None
 

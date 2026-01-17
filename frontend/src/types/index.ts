@@ -155,6 +155,23 @@ export interface PillarProgress {
   streakDays: number;
 }
 
+export interface LevelRequirement {
+  label: string;
+  current: number;
+  target: number;
+  met: boolean;
+}
+
+export interface LevelProgressInfo {
+  current_level: string;
+  next_level: string | null;
+  overall_progress: number;
+  requirements_met?: number;
+  total_requirements?: number;
+  message: string;
+  requirements?: Record<string, LevelRequirement>;
+}
+
 export interface OverallProgress {
   userId: string;
   currentLevel: 'beginner' | 'intermediate';
@@ -175,6 +192,7 @@ export interface OverallProgress {
   todayStudyMinutes: number;
   todayActivitiesCompleted: number;
   message?: string;
+  levelProgress?: LevelProgressInfo;
 }
 
 // ==================== SCHEDULE TYPES ====================

@@ -249,14 +249,27 @@ class TestGenerateExercise:
         mock_speech_service,
         sample_user_state
     ):
-        """Test exercise generation filtered by difficulty."""
+        """Test exercise generation filtered by difficulty respects level filtering.
+
+        Beginner users cannot access high difficulty sounds (level filtering).
+        Intermediate users can access all difficulties.
+        """
         await pronunciation_agent._load_sounds()
 
+        # Test 1: Beginner user requesting high difficulty should get no_sounds
+        # (because level filtering restricts high difficulty for beginners)
         sample_user_state["activity_input"] = {"difficulty": "high"}
+        sample_user_state["user"]["current_level"] = "beginner"
         result_state = await pronunciation_agent.process(sample_user_state)
 
-        assert result_state["response"]["status"] == "success"
-        # Might return "no_sounds" if no high difficulty sounds available for beginner
+        # Beginner cannot access high difficulty sounds due to level filtering
+        assert result_state["response"]["status"] == "no_sounds"
+
+        # Test 2: Intermediate user can access high difficulty sounds
+        sample_user_state["user"]["current_level"] = "intermediate"
+        result_state = await pronunciation_agent.process(sample_user_state)
+
+        # Intermediate user should be able to get high difficulty sounds
         if result_state["response"]["status"] == "success":
             sound = result_state["response"]["exercise"]["sound"]
             assert sound["difficulty"] == "high"

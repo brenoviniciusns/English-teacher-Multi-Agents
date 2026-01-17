@@ -59,6 +59,32 @@ class GrammarAgent(BaseAgent[AppState]):
         self._rules_cache: dict[str, dict] = {}
         self._rules_by_category: dict[str, list[dict]] = {}
 
+    def _is_rule_for_level(self, rule: dict, user_level: str) -> bool:
+        """
+        Check if a grammar rule is appropriate for the user's level.
+
+        Level logic:
+        - Beginner: Only beginner rules
+        - Intermediate: Both beginner and intermediate rules
+
+        Args:
+            rule: The grammar rule dictionary
+            user_level: The user's current level ('beginner' or 'intermediate')
+
+        Returns:
+            True if the rule is appropriate for the user's level
+        """
+        rule_difficulty = rule.get("difficulty", "beginner")
+        rule_level_req = rule.get("level_requirement", rule_difficulty)
+
+        if user_level == "beginner":
+            # Beginners only see beginner content
+            return rule_difficulty == "beginner" or rule_level_req == "beginner"
+        else:
+            # Intermediate users see both beginner and intermediate content
+            return rule_difficulty in ["beginner", "intermediate"] or \
+                   rule_level_req in ["beginner", "intermediate"]
+
     @property
     def name(self) -> str:
         return "grammar"
@@ -558,7 +584,13 @@ class GrammarAgent(BaseAgent[AppState]):
         level: str,
         category: Optional[str] = None
     ) -> Optional[dict]:
-        """Get a new rule that the user hasn't studied yet."""
+        """
+        Get a new rule that the user hasn't studied yet.
+
+        Level-based filtering:
+        - Beginner: Only beginner rules
+        - Intermediate: Both beginner and intermediate rules (intermediate prioritized)
+        """
         await self._load_rules()
 
         # Get user's existing progress
@@ -570,28 +602,34 @@ class GrammarAgent(BaseAgent[AppState]):
         for rule_id, rule in self._rules_cache.items():
             if rule_id in studied_rule_ids:
                 continue
-            if rule.get("difficulty") != level and level != "all":
+            # Use level-based filtering
+            if level != "all" and not self._is_rule_for_level(rule, level):
                 continue
             if category and rule.get("category") != category:
                 continue
             available_rules.append(rule)
 
         if not available_rules:
-            # Try without level filter
-            available_rules = [
-                r for r_id, r in self._rules_cache.items()
-                if r_id not in studied_rule_ids
-                and (not category or r.get("category") == category)
-            ]
-
-        if not available_rules:
             return None
 
-        # Prioritize rules that don't exist in Portuguese (harder for learners)
-        # but start with ones that do exist (easier)
-        available_rules.sort(
-            key=lambda x: (not x.get("exists_in_portuguese", True), x.get("name", ""))
-        )
+        # Sorting priority:
+        # 1. For intermediate users: intermediate rules first, then beginner
+        # 2. Rules that exist in Portuguese first (easier), then those that don't
+        # 3. Alphabetically by name
+        def sort_key(rule):
+            rule_difficulty = rule.get("difficulty", "beginner")
+            # For intermediate users, prioritize intermediate content
+            if level == "intermediate":
+                level_priority = 0 if rule_difficulty == "intermediate" else 1
+            else:
+                level_priority = 0  # For beginners, no level priority needed
+
+            # Start with rules that exist in Portuguese (easier for learners)
+            pt_priority = 0 if rule.get("exists_in_portuguese", True) else 1
+
+            return (level_priority, pt_priority, rule.get("name", ""))
+
+        available_rules.sort(key=sort_key)
 
         return available_rules[0]
 
@@ -600,12 +638,18 @@ class GrammarAgent(BaseAgent[AppState]):
         level: str,
         category: Optional[str] = None
     ) -> Optional[dict]:
-        """Get a random rule as fallback."""
+        """
+        Get a random rule as fallback.
+
+        Uses level-based filtering:
+        - Beginner: Only beginner rules
+        - Intermediate: Both beginner and intermediate rules
+        """
         await self._load_rules()
 
         rules = [
             r for r in self._rules_cache.values()
-            if r.get("difficulty") == level or level == "all"
+            if (level == "all" or self._is_rule_for_level(r, level))
             and (not category or r.get("category") == category)
         ]
 

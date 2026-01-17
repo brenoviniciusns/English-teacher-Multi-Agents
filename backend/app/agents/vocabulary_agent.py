@@ -316,13 +316,37 @@ class VocabularyAgent(BaseAgent[AppState]):
 
         return None
 
+    def _is_word_for_level(self, word: dict, user_level: str) -> bool:
+        """
+        Check if a word is appropriate for the user's level.
+
+        Level logic:
+        - Beginner: Only beginner words
+        - Intermediate: Both beginner and intermediate words
+        """
+        word_difficulty = word.get("difficulty", "beginner")
+        word_level_req = word.get("level_requirement", word_difficulty)
+
+        if user_level == "beginner":
+            # Beginners only see beginner content
+            return word_difficulty == "beginner" or word_level_req == "beginner"
+        else:
+            # Intermediate users see both beginner and intermediate
+            return word_difficulty in ["beginner", "intermediate"] or \
+                   word_level_req in ["beginner", "intermediate"]
+
     async def _get_new_word(
         self,
         user_id: str,
         level: str,
         context: str
     ) -> Optional[dict]:
-        """Get a new word that the user hasn't learned yet."""
+        """
+        Get a new word that the user hasn't learned yet.
+
+        For beginners: prioritize beginner words by frequency
+        For intermediate: prioritize intermediate words, then beginner words
+        """
         await self._load_words()
 
         # Get user's existing progress
@@ -331,49 +355,63 @@ class VocabularyAgent(BaseAgent[AppState]):
 
         # Determine which words to consider
         if context in ["data_engineering", "ai", "technology"]:
-            # Prefer technical words
+            # Prefer technical words filtered by level
             available_words = [
                 w for w_id, w in self._technical_words_cache.items()
                 if w_id not in learned_word_ids
-                and w.get("subcategory") in [context, "programming", "cloud"]
+                and self._is_word_for_level(w, level)
+                and w.get("subcategory") in [context, "programming", "cloud", "data_engineering", "artificial_intelligence"]
             ]
-            # If no technical words available, fall back to common
+            # If no technical words available, fall back to common words
             if not available_words:
                 available_words = [
                     w for w_id, w in self._words_cache.items()
                     if w_id not in learned_word_ids
-                    and w.get("difficulty") == level
+                    and self._is_word_for_level(w, level)
                 ]
         else:
             # Use common words filtered by level
             available_words = [
                 w for w_id, w in self._words_cache.items()
                 if w_id not in learned_word_ids
-                and w.get("difficulty") == level
+                and self._is_word_for_level(w, level)
             ]
 
         if not available_words:
-            # All words learned at this level, try any level
-            available_words = [
-                w for w_id, w in self._words_cache.items()
-                if w_id not in learned_word_ids
-            ]
-
-        if not available_words:
+            self.log_debug(f"No new words available for level {level}")
             return None
 
-        # Select word with lower frequency rank (more common = lower rank)
-        available_words.sort(key=lambda x: x.get("frequency_rank", 9999))
+        # Sort strategy based on level
+        if level == "intermediate":
+            # For intermediate: prioritize intermediate words first, then by frequency
+            available_words.sort(
+                key=lambda x: (
+                    0 if x.get("difficulty") == "intermediate" else 1,
+                    x.get("frequency_rank", 9999)
+                )
+            )
+        else:
+            # For beginner: sort by frequency rank (most common first)
+            available_words.sort(key=lambda x: x.get("frequency_rank", 9999))
+
         return available_words[0]
 
     async def _get_random_word(self, level: str, context: str) -> Optional[dict]:
-        """Get a random word as fallback."""
+        """Get a random word as fallback, filtered by user level."""
         await self._load_words()
 
         if context in ["data_engineering", "ai", "technology"]:
-            words = list(self._technical_words_cache.values())
+            # Filter technical words by level
+            words = [
+                w for w in self._technical_words_cache.values()
+                if self._is_word_for_level(w, level)
+            ]
         else:
-            words = [w for w in self._words_cache.values() if w.get("difficulty") == level]
+            # Filter common words by level
+            words = [
+                w for w in self._words_cache.values()
+                if self._is_word_for_level(w, level)
+            ]
 
         return random.choice(words) if words else None
 

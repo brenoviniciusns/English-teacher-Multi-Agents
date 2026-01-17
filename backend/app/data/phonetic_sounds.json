@@ -1,7 +1,13 @@
 {
   "metadata": {
-    "description": "Phonetic sounds that don't exist in Portuguese or are commonly mispronounced",
-    "total_sounds": 15,
+    "description": "Phonetic sounds and connected speech patterns with level categorization",
+    "total_sounds": 20,
+    "beginner_sounds": 12,
+    "intermediate_sounds": 8,
+    "levels": {
+      "beginner": "Individual phonemes - easy to medium difficulty sounds that exist or have equivalents in Portuguese",
+      "intermediate": "Difficult phonemes (th, r) and connected speech patterns (linking, reduction, assimilation)"
+    },
     "note": "Focus on sounds problematic for Portuguese speakers"
   },
   "sounds": [
@@ -12,6 +18,7 @@
       "name": "voiceless dental fricative",
       "exists_in_portuguese": false,
       "difficulty": "high",
+      "level_requirement": "intermediate",
       "mouth_position": {
         "tongue": "Place tongue tip gently between upper and lower teeth",
         "lips": "Slightly open, relaxed, not rounded",
@@ -37,6 +44,7 @@
       "name": "voiced dental fricative",
       "exists_in_portuguese": false,
       "difficulty": "high",
+      "level_requirement": "intermediate",
       "mouth_position": {
         "tongue": "Place tongue tip gently between upper and lower teeth",
         "lips": "Slightly open, relaxed",
@@ -131,6 +139,7 @@
       "name": "alveolar approximant (American R)",
       "exists_in_portuguese": false,
       "difficulty": "high",
+      "level_requirement": "intermediate",
       "mouth_position": {
         "tongue": "Curl back slightly (retroflex) without touching roof of mouth",
         "lips": "Slightly rounded",
@@ -341,6 +350,126 @@
       "common_mistake": "Not gliding - saying pure /e/ instead of the diphthong",
       "portuguese_similar": "Like 'ei' in 'lei' but starts more open",
       "tip": "START with mouth more open than Portuguese 'e', then glide to 'i' sound."
+    },
+    {
+      "id": "sound_016",
+      "phoneme": "linking_cv",
+      "ipa": "C+V→CV",
+      "name": "Consonant-Vowel Linking",
+      "exists_in_portuguese": false,
+      "difficulty": "high",
+      "level_requirement": "intermediate",
+      "category": "connected_speech",
+      "mouth_position": {
+        "description": "The final consonant of one word connects smoothly to the initial vowel of the next word"
+      },
+      "example_words": ["an_apple", "get_up", "look_at", "turn_on", "what_is", "not_at_all"],
+      "example_phrases": [
+        {"phrase": "an apple", "connected": "a-napple", "audio_guide": "Sounds like 'a napple'"},
+        {"phrase": "get up", "connected": "ge-tup", "audio_guide": "Sounds like 'getup'"},
+        {"phrase": "look at it", "connected": "loo-ka-tit", "audio_guide": "Sounds like 'lookatit'"}
+      ],
+      "minimal_pairs": [],
+      "common_mistake": "Pausing between words instead of linking them smoothly",
+      "portuguese_similar": null,
+      "tip": "Move the final consonant to the beginning of the next word. 'An apple' becomes 'a-napple'."
+    },
+    {
+      "id": "sound_017",
+      "phoneme": "linking_vv",
+      "ipa": "V+V→VjV/VwV",
+      "name": "Vowel-Vowel Linking (Intrusive sounds)",
+      "exists_in_portuguese": false,
+      "difficulty": "high",
+      "level_requirement": "intermediate",
+      "category": "connected_speech",
+      "mouth_position": {
+        "description": "A glide sound (/w/ or /j/) is inserted between two vowels at word boundaries"
+      },
+      "example_words": ["go_on", "see_it", "do_it", "she_is", "who_is", "I_am"],
+      "example_phrases": [
+        {"phrase": "go on", "connected": "go-won", "audio_guide": "Insert /w/ between: 'go-won'"},
+        {"phrase": "see it", "connected": "see-yit", "audio_guide": "Insert /j/ between: 'see-yit'"},
+        {"phrase": "who is", "connected": "who-wis", "audio_guide": "Insert /w/ between: 'who-wis'"}
+      ],
+      "minimal_pairs": [],
+      "common_mistake": "Using a glottal stop between vowels instead of linking",
+      "portuguese_similar": null,
+      "tip": "If first word ends in /uː, oʊ, aʊ/, insert /w/. If ends in /iː, eɪ, aɪ/, insert /j/."
+    },
+    {
+      "id": "sound_018",
+      "phoneme": "reduction_gonna",
+      "ipa": "ˈɡənə",
+      "name": "Going to → gonna (Reduction)",
+      "exists_in_portuguese": false,
+      "difficulty": "high",
+      "level_requirement": "intermediate",
+      "category": "connected_speech",
+      "mouth_position": {
+        "description": "Function words are reduced in fast natural speech"
+      },
+      "example_words": ["gonna", "wanna", "gotta", "hafta", "shoulda", "coulda", "woulda"],
+      "example_phrases": [
+        {"phrase": "going to", "connected": "gonna", "audio_guide": "'Going to eat' becomes 'gonna eat'"},
+        {"phrase": "want to", "connected": "wanna", "audio_guide": "'Want to go' becomes 'wanna go'"},
+        {"phrase": "have to", "connected": "hafta", "audio_guide": "'Have to do' becomes 'hafta do'"},
+        {"phrase": "got to", "connected": "gotta", "audio_guide": "'Got to leave' becomes 'gotta leave'"}
+      ],
+      "minimal_pairs": [],
+      "common_mistake": "Always using full forms - sounds unnatural in casual speech",
+      "portuguese_similar": "Similar to contractions like 'pra' (para) in Portuguese",
+      "tip": "These are SPOKEN reductions, used in casual speech. Don't write them in formal contexts."
+    },
+    {
+      "id": "sound_019",
+      "phoneme": "flap_t",
+      "ipa": "ɾ",
+      "name": "Flap T / Tap T",
+      "exists_in_portuguese": true,
+      "difficulty": "high",
+      "level_requirement": "intermediate",
+      "category": "connected_speech",
+      "mouth_position": {
+        "tongue": "Quick tap against the alveolar ridge",
+        "description": "T and D between vowels in American English sound like a quick tap"
+      },
+      "example_words": ["water", "butter", "letter", "better", "matter", "city", "party", "ladder"],
+      "example_phrases": [
+        {"phrase": "water", "connected": "wader", "audio_guide": "T sounds like a quick D"},
+        {"phrase": "better", "connected": "bedder", "audio_guide": "TT sounds like D"},
+        {"phrase": "what a", "connected": "whada", "audio_guide": "T becomes a flap between vowels"}
+      ],
+      "minimal_pairs": [
+        {"target": "writer", "contrast": "rider", "difference": "Both sound nearly identical in American English"}
+      ],
+      "common_mistake": "Using a strong /t/ sound instead of the quick flap",
+      "portuguese_similar": "Like the 'r' in 'caro' (single tap R) in Portuguese",
+      "tip": "This is the same sound as Portuguese single 'r' between vowels. Very quick tongue tap!"
+    },
+    {
+      "id": "sound_020",
+      "phoneme": "weak_forms",
+      "ipa": "wk",
+      "name": "Weak Forms (Function Words)",
+      "exists_in_portuguese": true,
+      "difficulty": "high",
+      "level_requirement": "intermediate",
+      "category": "connected_speech",
+      "mouth_position": {
+        "description": "Function words (to, for, of, from, at, can, have, etc.) are pronounced with schwa in natural speech"
+      },
+      "example_words": ["to_/tə/", "for_/fə/", "of_/əv/", "from_/frəm/", "at_/ət/", "can_/kən/", "have_/həv/"],
+      "example_phrases": [
+        {"phrase": "go to work", "connected": "go tə work", "audio_guide": "'to' reduces to /tə/"},
+        {"phrase": "cup of tea", "connected": "cup əv tea", "audio_guide": "'of' reduces to /əv/"},
+        {"phrase": "I can do it", "connected": "I kən do it", "audio_guide": "'can' reduces to /kən/"},
+        {"phrase": "for you", "connected": "fə you", "audio_guide": "'for' reduces to /fə/"}
+      ],
+      "minimal_pairs": [],
+      "common_mistake": "Pronouncing all words with their strong/stressed form",
+      "portuguese_similar": "Similar to how 'de' becomes 'di' in Brazilian Portuguese",
+      "tip": "Content words (nouns, verbs, adjectives) keep strong pronunciation. Function words (prepositions, articles, auxiliaries) use weak forms in natural speech."
     }
   ]
 }

@@ -56,6 +56,30 @@ class SpeakingAgent(BaseAgent[AppState]):
         self._topics_cache: dict[str, dict] = {}
         self._topics_by_difficulty: dict[str, list[dict]] = {}
 
+    def _is_topic_for_level(self, topic: dict, user_level: str) -> bool:
+        """
+        Check if a conversation topic is appropriate for the user's level.
+
+        Level logic:
+        - Beginner: Only beginner topics (simple, structured conversation)
+        - Intermediate: Both beginner and intermediate topics (complex conversation)
+
+        Args:
+            topic: The topic dictionary
+            user_level: The user's current level ('beginner' or 'intermediate')
+
+        Returns:
+            True if the topic is appropriate for the user's level
+        """
+        topic_difficulty = topic.get("difficulty", "beginner")
+
+        if user_level == "beginner":
+            # Beginners only see beginner topics
+            return topic_difficulty == "beginner"
+        else:
+            # Intermediate users see both beginner and intermediate topics
+            return topic_difficulty in ["beginner", "intermediate"]
+
     @property
     def name(self) -> str:
         return "speaking"
@@ -204,7 +228,8 @@ class SpeakingAgent(BaseAgent[AppState]):
             "is_active": True
         }
 
-        # Generate suggested responses for beginner users
+        # Generate suggested responses for beginner users only
+        # Intermediate users should practice without assistance
         suggested_responses = None
         if user_level == "beginner":
             suggested_responses = await self._generate_suggested_responses(
@@ -212,17 +237,23 @@ class SpeakingAgent(BaseAgent[AppState]):
                 opening_prompt=opening_prompt
             )
 
+        # Prepare level-specific hints
+        vocabulary_hints = topic.get("vocabulary_hints", []) if user_level == "beginner" else []
+        grammar_focus = topic.get("grammar_focus", [])
+
         state["response"] = {
             "type": "speaking_session_start",
             "status": "success",
             "session_id": session_id,
             "topic": topic["name"],
             "topic_description": topic.get("description", ""),
+            "topic_difficulty": topic.get("difficulty", "beginner"),
+            "user_level": user_level,
             "initial_prompt": opening_prompt,
             "initial_prompt_audio": opening_audio,
             "suggested_responses": suggested_responses,
-            "vocabulary_hints": topic.get("vocabulary_hints", []),
-            "grammar_focus": topic.get("grammar_focus", [])
+            "vocabulary_hints": vocabulary_hints,
+            "grammar_focus": grammar_focus
         }
 
         state = add_agent_message(
@@ -579,25 +610,43 @@ class SpeakingAgent(BaseAgent[AppState]):
         topic_id: Optional[str] = None,
         difficulty: Optional[str] = None
     ) -> Optional[dict]:
-        """Select a conversation topic."""
+        """
+        Select a conversation topic.
+
+        Level-based filtering:
+        - Beginner: Only beginner topics (simple, everyday conversations)
+        - Intermediate: Both beginner and intermediate topics (more complex discussions)
+        """
         await self._load_topics()
 
         # If specific topic requested
         if topic_id:
             return self._topics_cache.get(topic_id)
 
-        # Filter by difficulty
-        if difficulty and difficulty in self._topics_by_difficulty:
-            available = self._topics_by_difficulty[difficulty]
-        elif level == "beginner":
-            available = self._topics_by_difficulty.get("beginner", [])
-        else:
+        # Filter by level using the level filtering method
+        available = [
+            topic for topic in self._topics_cache.values()
+            if (level == "all" or self._is_topic_for_level(topic, level))
+            and (not difficulty or topic.get("difficulty") == difficulty)
+        ]
+
+        if not available:
+            # Fallback to all topics if no match found
             available = list(self._topics_cache.values())
 
         if not available:
-            available = list(self._topics_cache.values())
+            return None
 
-        return random.choice(available) if available else None
+        # For intermediate users, prioritize intermediate topics
+        if level == "intermediate":
+            # Sort: intermediate topics first, then beginner
+            available.sort(key=lambda t: 0 if t.get("difficulty") == "intermediate" else 1)
+            # Return a random topic from the top half (intermediate priority)
+            intermediate_topics = [t for t in available if t.get("difficulty") == "intermediate"]
+            if intermediate_topics and random.random() > 0.3:  # 70% chance of intermediate topic
+                return random.choice(intermediate_topics)
+
+        return random.choice(available)
 
     async def _load_topics(self):
         """Load conversation topics from JSON file."""

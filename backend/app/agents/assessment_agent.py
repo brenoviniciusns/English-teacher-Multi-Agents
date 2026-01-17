@@ -139,7 +139,7 @@ class AssessmentAgent(BaseAgent[AppState]):
         # Determine if level change is warranted
         current_level = state["user"].get("current_level", "beginner")
         new_level, should_change = self._determine_level_change(
-            current_level, scores
+            current_level, scores, stats
         )
 
         # Generate recommendations
@@ -186,10 +186,14 @@ class AssessmentAgent(BaseAgent[AppState]):
                 "sessions_since_last_assessment": 0
             })
 
+        # Calculate progress towards next level
+        level_progress = self._calculate_level_progress(scores, stats, current_level)
+
         state["response"] = {
             "type": "assessment_continuous",
             "result": result.model_dump(),
             "level_changed": should_change,
+            "level_progress": level_progress,
             "message": self._generate_assessment_message(result)
         }
 
@@ -486,27 +490,169 @@ class AssessmentAgent(BaseAgent[AppState]):
     def _determine_level_change(
         self,
         current_level: str,
-        scores: dict
+        scores: dict,
+        stats: dict = None
     ) -> tuple[str, bool]:
         """
         Determine if user should change level.
+
+        Upgrade criteria (beginner -> intermediate):
+        - Overall score >= 85% (INTERMEDIATE_UPGRADE_THRESHOLD)
+        - All pillars >= 75%
+        - At least 50 vocabulary words mastered
+        - At least 10 grammar rules practiced with good scores
+        - At least 5 pronunciation sounds mastered
+        - At least 3 speaking sessions completed
+
+        Downgrade criteria (intermediate -> beginner):
+        - Overall score < 65% for extended period
 
         Returns:
             Tuple of (new_level, should_change)
         """
         overall = sum(scores.values()) / 4
         threshold = self.settings.INTERMEDIATE_UPGRADE_THRESHOLD
+        min_pillar_score = threshold - 10  # 75%
 
         if current_level == "beginner":
             # Check if ready for intermediate
-            if overall >= threshold and all(s >= threshold - 10 for s in scores.values()):
-                return "intermediate", True
+            if overall >= threshold and all(s >= min_pillar_score for s in scores.values()):
+                # Additional mastery requirements if stats available
+                if stats:
+                    vocab_stats = stats.get("vocabulary", {})
+                    grammar_stats = stats.get("grammar", {})
+                    pronun_stats = stats.get("pronunciation", {})
+                    speaking_stats = stats.get("speaking", {})
+
+                    # Minimum mastery requirements for level upgrade
+                    vocab_mastered = vocab_stats.get("mastered", 0) >= 50
+                    grammar_practiced = grammar_stats.get("rules_practiced", 0) >= 10
+                    pronun_mastered = pronun_stats.get("mastered", 0) >= 5
+                    speaking_sessions = speaking_stats.get("total_sessions", 0) >= 3
+
+                    if all([vocab_mastered, grammar_practiced, pronun_mastered, speaking_sessions]):
+                        return "intermediate", True
+                    else:
+                        # Not enough content mastered yet
+                        return current_level, False
+                else:
+                    # Without stats, use score-based upgrade
+                    return "intermediate", True
         else:
             # Intermediate - check if should downgrade (rare)
-            if overall < threshold - 20:
+            if overall < threshold - 20:  # Below 65%
                 return "beginner", True
 
         return current_level, False
+
+    def _calculate_level_progress(
+        self,
+        scores: dict,
+        stats: dict,
+        current_level: str
+    ) -> dict:
+        """
+        Calculate user's progress towards the next level.
+
+        Returns detailed progress breakdown for each requirement.
+        """
+        if current_level != "beginner":
+            # Already at highest level
+            return {
+                "current_level": current_level,
+                "next_level": None,
+                "overall_progress": 100,
+                "message": "Você está no nível mais alto! Continue praticando para manter sua fluência."
+            }
+
+        threshold = self.settings.INTERMEDIATE_UPGRADE_THRESHOLD
+        min_pillar_score = threshold - 10
+
+        # Calculate progress for each criterion
+        vocab_stats = stats.get("vocabulary", {}) if stats else {}
+        grammar_stats = stats.get("grammar", {}) if stats else {}
+        pronun_stats = stats.get("pronunciation", {}) if stats else {}
+        speaking_stats = stats.get("speaking", {}) if stats else {}
+
+        progress = {
+            "current_level": current_level,
+            "next_level": "intermediate",
+            "requirements": {
+                "overall_score": {
+                    "label": "Pontuação Geral",
+                    "current": sum(scores.values()) / 4,
+                    "target": threshold,
+                    "met": sum(scores.values()) / 4 >= threshold
+                },
+                "vocabulary_score": {
+                    "label": "Pontuação de Vocabulário",
+                    "current": scores.get("vocabulary", 0),
+                    "target": min_pillar_score,
+                    "met": scores.get("vocabulary", 0) >= min_pillar_score
+                },
+                "grammar_score": {
+                    "label": "Pontuação de Gramática",
+                    "current": scores.get("grammar", 0),
+                    "target": min_pillar_score,
+                    "met": scores.get("grammar", 0) >= min_pillar_score
+                },
+                "pronunciation_score": {
+                    "label": "Pontuação de Pronúncia",
+                    "current": scores.get("pronunciation", 0),
+                    "target": min_pillar_score,
+                    "met": scores.get("pronunciation", 0) >= min_pillar_score
+                },
+                "speaking_score": {
+                    "label": "Pontuação de Conversação",
+                    "current": scores.get("speaking", 0),
+                    "target": min_pillar_score,
+                    "met": scores.get("speaking", 0) >= min_pillar_score
+                },
+                "vocabulary_mastered": {
+                    "label": "Palavras Dominadas",
+                    "current": vocab_stats.get("mastered", 0),
+                    "target": 50,
+                    "met": vocab_stats.get("mastered", 0) >= 50
+                },
+                "grammar_practiced": {
+                    "label": "Regras de Gramática Praticadas",
+                    "current": grammar_stats.get("rules_practiced", 0),
+                    "target": 10,
+                    "met": grammar_stats.get("rules_practiced", 0) >= 10
+                },
+                "pronunciation_mastered": {
+                    "label": "Sons Dominados",
+                    "current": pronun_stats.get("mastered", 0),
+                    "target": 5,
+                    "met": pronun_stats.get("mastered", 0) >= 5
+                },
+                "speaking_sessions": {
+                    "label": "Sessões de Conversação",
+                    "current": speaking_stats.get("total_sessions", 0),
+                    "target": 3,
+                    "met": speaking_stats.get("total_sessions", 0) >= 3
+                }
+            }
+        }
+
+        # Calculate overall progress percentage
+        requirements_met = sum(1 for req in progress["requirements"].values() if req["met"])
+        total_requirements = len(progress["requirements"])
+        progress["overall_progress"] = int((requirements_met / total_requirements) * 100)
+        progress["requirements_met"] = requirements_met
+        progress["total_requirements"] = total_requirements
+
+        # Generate progress message
+        if progress["overall_progress"] >= 100:
+            progress["message"] = "Parabéns! Você está pronto para avançar para o nível Intermediário!"
+        elif progress["overall_progress"] >= 75:
+            progress["message"] = "Você está quase lá! Continue praticando para alcançar o nível Intermediário."
+        elif progress["overall_progress"] >= 50:
+            progress["message"] = "Bom progresso! Metade dos requisitos já foram cumpridos."
+        else:
+            progress["message"] = "Continue praticando! Cada sessão te aproxima do próximo nível."
+
+        return progress
 
     def _generate_recommendations(
         self,

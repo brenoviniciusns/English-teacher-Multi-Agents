@@ -18,6 +18,7 @@ import {
 import { Flame, Target, TrendingUp, Award, Clock, BookOpen } from 'lucide-react';
 import { useAppDispatch, useAppSelector, fetchDashboard, fetchStreak } from '../../store';
 import type { OverallProgress, PillarProgress } from '../../types';
+import { LevelProgressCard, LevelProgress } from './LevelProgressCard';
 
 interface ProgressDashboardProps {
   userId: string;
@@ -103,28 +104,42 @@ export const ProgressDashboard: FC<ProgressDashboardProps> = ({ userId }) => {
     100
   );
 
+  // Build level progress object for LevelProgressCard
+  const levelProgress: LevelProgress = {
+    current_level: overallProgress.currentLevel || 'beginner',
+    next_level: overallProgress.currentLevel === 'intermediate' ? null : 'intermediate',
+    overall_progress: overallProgress.levelProgress?.overall_progress ||
+      (overallProgress.readyForLevelUp ? 100 : Math.min(overallProgress.overallScore, 99)),
+    requirements_met: overallProgress.levelProgress?.requirements_met,
+    total_requirements: overallProgress.levelProgress?.total_requirements,
+    message: overallProgress.levelProgress?.message ||
+      (overallProgress.readyForLevelUp
+        ? 'Parabéns! Você está pronto para avançar de nível!'
+        : 'Continue praticando para alcançar o próximo nível.'),
+    requirements: overallProgress.levelProgress?.requirements
+  };
+
+  const handleRequestAssessment = () => {
+    // Dispatch action to trigger continuous assessment
+    console.log('Requesting level assessment');
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header with Level and Streak */}
-      <div className="flex flex-wrap gap-4 justify-between items-start">
-        {/* Level Badge */}
-        <div className="flex items-center gap-3">
-          <div className="badge badge-lg badge-primary">
-            {overallProgress.currentLevel === 'beginner' ? 'Iniciante' : 'Intermediário'}
-          </div>
-          {overallProgress.readyForLevelUp && (
-            <div className="badge badge-success badge-outline">
-              Pronto para avançar!
-            </div>
-          )}
-        </div>
-
+      {/* Header with Streak */}
+      <div className="flex flex-wrap gap-4 justify-end items-start">
         {/* Streak Counter */}
         <StreakCard
           currentStreak={overallProgress.currentStreakDays}
           longestStreak={overallProgress.longestStreakDays}
         />
       </div>
+
+      {/* Level Progress Card */}
+      <LevelProgressCard
+        levelProgress={levelProgress}
+        onRequestAssessment={overallProgress.readyForLevelUp ? handleRequestAssessment : undefined}
+      />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
