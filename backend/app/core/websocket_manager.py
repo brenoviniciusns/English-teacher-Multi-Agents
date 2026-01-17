@@ -354,3 +354,190 @@ async def pronunciation_ws_handler(user_id: str, message: dict) -> dict:
 
 # Register pronunciation handler
 websocket_manager.register_handler("pronunciation", pronunciation_ws_handler)
+
+
+# ==================== SPEAKING WEBSOCKET HANDLER ====================
+
+async def speaking_ws_handler(user_id: str, message: dict) -> dict:
+    """
+    Handle speaking/conversation WebSocket messages.
+
+    Message types:
+    - start_session: Start a new conversation session
+    - audio_turn: User sends audio for a conversation turn
+    - text_turn: User sends text for a conversation turn
+    - end_session: End the current session
+    - get_status: Get current session status
+    """
+    from app.agents.speaking_agent import speaking_agent
+    from app.agents.state import create_initial_state
+    from app.services.azure_speech_service import azure_speech_service
+
+    msg_type = message.get("type")
+
+    if msg_type == "start_session":
+        # Start a new conversation session
+        topic_id = message.get("topic_id")
+        difficulty = message.get("difficulty")
+
+        try:
+            # Create state for speaking agent
+            state = create_initial_state(
+                user_id=user_id,
+                request_type="speaking_session"
+            )
+            state["activity_input"] = {
+                "action": "start",
+                "topic_id": topic_id,
+                "difficulty": difficulty
+            }
+
+            # Process through speaking agent
+            result_state = await speaking_agent.process(state)
+
+            return {
+                "type": "session_started",
+                **result_state.get("response", {})
+            }
+        except Exception as e:
+            return {
+                "type": "error",
+                "message": str(e)
+            }
+
+    elif msg_type == "audio_turn":
+        # Process audio from user
+        session_id = message.get("session_id")
+        audio_base64 = message.get("audio_base64")
+
+        if not session_id or not audio_base64:
+            return {
+                "type": "error",
+                "message": "Missing session_id or audio_base64"
+            }
+
+        try:
+            # Create state for speaking agent
+            state = create_initial_state(
+                user_id=user_id,
+                request_type="speaking_session"
+            )
+            state["activity_input"] = {
+                "action": "turn",
+                "session_id": session_id,
+                "audio_base64": audio_base64
+            }
+
+            # Process through speaking agent
+            result_state = await speaking_agent.process(state)
+
+            return {
+                "type": "turn_processed",
+                **result_state.get("response", {})
+            }
+        except Exception as e:
+            return {
+                "type": "error",
+                "message": str(e)
+            }
+
+    elif msg_type == "text_turn":
+        # Process text from user
+        session_id = message.get("session_id")
+        user_text = message.get("text")
+
+        if not session_id or not user_text:
+            return {
+                "type": "error",
+                "message": "Missing session_id or text"
+            }
+
+        try:
+            # Create state for speaking agent
+            state = create_initial_state(
+                user_id=user_id,
+                request_type="speaking_session"
+            )
+            state["activity_input"] = {
+                "action": "turn",
+                "session_id": session_id,
+                "user_text": user_text
+            }
+
+            # Process through speaking agent
+            result_state = await speaking_agent.process(state)
+
+            return {
+                "type": "turn_processed",
+                **result_state.get("response", {})
+            }
+        except Exception as e:
+            return {
+                "type": "error",
+                "message": str(e)
+            }
+
+    elif msg_type == "end_session":
+        # End the conversation session
+        session_id = message.get("session_id")
+
+        if not session_id:
+            return {
+                "type": "error",
+                "message": "Missing session_id"
+            }
+
+        try:
+            # Create state for speaking agent
+            state = create_initial_state(
+                user_id=user_id,
+                request_type="speaking_session"
+            )
+            state["activity_input"] = {
+                "action": "end",
+                "session_id": session_id
+            }
+
+            # Process through speaking agent
+            result_state = await speaking_agent.process(state)
+
+            return {
+                "type": "session_ended",
+                **result_state.get("response", {})
+            }
+        except Exception as e:
+            return {
+                "type": "error",
+                "message": str(e)
+            }
+
+    elif msg_type == "get_status":
+        # Get current session status
+        try:
+            active_session = await speaking_agent.get_active_session(user_id)
+
+            if active_session:
+                return {
+                    "type": "session_status",
+                    "has_active_session": True,
+                    "session_id": active_session.get("id"),
+                    "topic": active_session.get("topicName"),
+                    "turn_count": active_session.get("currentTurn", 0),
+                    "started_at": active_session.get("startedAt")
+                }
+            else:
+                return {
+                    "type": "session_status",
+                    "has_active_session": False
+                }
+        except Exception as e:
+            return {
+                "type": "error",
+                "message": str(e)
+            }
+
+    return {"type": "unknown", "message": f"Unknown message type: {msg_type}"}
+
+
+# Register speaking handler
+websocket_manager.register_handler("speaking", speaking_ws_handler)

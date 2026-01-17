@@ -28,6 +28,8 @@ from app.agents.progress_agent import progress_agent
 from app.agents.vocabulary_agent import vocabulary_agent
 from app.agents.grammar_agent import grammar_agent
 from app.agents.pronunciation_agent import pronunciation_agent
+from app.agents.speaking_agent import speaking_agent
+from app.agents.error_integration_agent import error_integration_agent
 from app.config import Settings, get_settings
 from app.services.cosmos_db_service import cosmos_db_service
 
@@ -338,36 +340,23 @@ class Orchestrator(BaseAgent[AppState]):
 
     async def _speaking_node(self, state: AppState) -> AppState:
         """
-        Speaking agent node (placeholder for Phase 7).
+        Speaking agent node.
 
-        Will be fully implemented in the Speaking Pillar phase.
+        Handles conversation sessions through the SpeakingAgent.
+        Supports session start, turn processing, and session end.
         """
         self.log_debug("Speaking node processing")
-
-        # Placeholder response
-        state["response"] = {
-            "type": "speaking_session",
-            "status": "not_implemented",
-            "message": "Speaking agent will be implemented in Phase 7"
-        }
-        state["is_complete"] = True
-
-        return state
+        return await speaking_agent.process(state)
 
     async def _error_integration_node(self, state: AppState) -> AppState:
         """
-        Error integration agent node (placeholder for Phase 7).
+        Error integration agent node.
 
-        Will be fully implemented alongside Speaking Pillar.
+        Analyzes errors from conversation sessions and generates
+        corrective activities in Grammar and Pronunciation pillars.
         """
         self.log_debug("Error integration node processing")
-
-        # Check if there are errors to process
-        if state["errors"].get("has_errors"):
-            # Placeholder - will generate activities from errors
-            state["errors"]["generated_activity_ids"] = []
-
-        return state
+        return await error_integration_agent.process(state)
 
     async def _finalize_node(self, state: AppState) -> AppState:
         """

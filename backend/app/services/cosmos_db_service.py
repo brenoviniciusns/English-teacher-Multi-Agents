@@ -540,6 +540,88 @@ class CosmosDBService:
 
         return await self.query_items("schedule", query, parameters, user_id)
 
+    # ==================== SPEAKING SESSIONS (EXTENDED) ====================
+
+    async def get_active_speaking_sessions(self, user_id: str) -> list:
+        """Get active speaking sessions for a user."""
+        query = """
+            SELECT * FROM c
+            WHERE c.partitionKey = @user_id
+            AND c.status = 'active'
+            ORDER BY c.startedAt DESC
+        """
+        parameters = [{"name": "@user_id", "value": user_id}]
+        return await self.query_items("speaking_sessions", query, parameters, user_id)
+
+    async def get_speaking_sessions_history(
+        self,
+        user_id: str,
+        limit: int = 20,
+        status: Optional[str] = None
+    ) -> list:
+        """Get speaking session history for a user."""
+        if status:
+            query = """
+                SELECT * FROM c
+                WHERE c.partitionKey = @user_id
+                AND c.status = @status
+                ORDER BY c.startedAt DESC
+            """
+            parameters = [
+                {"name": "@user_id", "value": user_id},
+                {"name": "@status", "value": status}
+            ]
+        else:
+            query = """
+                SELECT * FROM c
+                WHERE c.partitionKey = @user_id
+                ORDER BY c.startedAt DESC
+            """
+            parameters = [
+                {"name": "@user_id", "value": user_id}
+            ]
+        results = await self.query_items("speaking_sessions", query, parameters, user_id)
+        return results[:limit]
+
+    async def get_speaking_progress(self, user_id: str) -> Optional[dict]:
+        """Get overall speaking progress for a user."""
+        progress_id = f"speaking_progress_{user_id}"
+        return await self.get_item("users", progress_id, user_id)
+
+    async def update_speaking_progress(
+        self,
+        user_id: str,
+        progress_data: dict
+    ) -> dict:
+        """Update or create speaking progress for a user."""
+        progress_id = f"speaking_progress_{user_id}"
+        progress_data["id"] = progress_id
+        progress_data["userId"] = user_id
+        return await self.upsert_item("users", progress_data, user_id)
+
+    async def add_exchange_to_session(
+        self,
+        user_id: str,
+        session_id: str,
+        exchange: dict
+    ) -> dict:
+        """Add a new exchange to a speaking session."""
+        session = await self.get_speaking_session(user_id, session_id)
+        if not session:
+            raise ValueError(f"Session not found: {session_id}")
+
+        exchanges = session.get("exchanges", [])
+        exchanges.append(exchange)
+
+        return await self.update_speaking_session(
+            user_id,
+            session_id,
+            {
+                "exchanges": exchanges,
+                "currentTurn": session.get("currentTurn", 0) + 1
+            }
+        )
+
     # ==================== STATISTICS ====================
 
     async def get_user_statistics(self, user_id: str) -> dict:
