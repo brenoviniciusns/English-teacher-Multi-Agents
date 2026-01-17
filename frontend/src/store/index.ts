@@ -5,12 +5,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
+import authReducer from './authSlice';
+import assessmentReducer from './assessmentSlice';
 import progressReducer from './progressSlice';
 import scheduleReducer from './scheduleSlice';
 
 // Create the store
 export const store = configureStore({
   reducer: {
+    auth: authReducer,
+    assessment: assessmentReducer,
     progress: progressReducer,
     schedule: scheduleReducer
   },
@@ -21,7 +25,7 @@ export const store = configureStore({
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE']
       }
     }),
-  devTools: process.env.NODE_ENV !== 'production'
+  devTools: import.meta.env.DEV
 });
 
 // Infer types from the store
@@ -33,7 +37,61 @@ export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 // Export all actions from slices
-export * from './progressSlice';
-export * from './scheduleSlice';
+// Auth actions
+export {
+  clearError as clearAuthError,
+  logout,
+  setUser,
+  updateUserScores,
+  setAssessmentCompleted,
+  setUserLevel,
+  registerUser,
+  loginUser,
+  fetchCurrentUser,
+  updateUserProfile
+} from './authSlice';
+
+// Assessment actions
+export {
+  clearError as clearAssessmentError,
+  clearAssessment,
+  addAnswer,
+  updateAnswer,
+  setAnswers,
+  clearAnswers,
+  updateCurrentStep,
+  startAssessment,
+  submitAssessmentAnswers,
+  fetchAssessmentResult,
+  fetchAssessmentStatus,
+  cancelAssessment
+} from './assessmentSlice';
+
+// Progress actions
+export {
+  clearError as clearProgressError,
+  setOverallProgress,
+  incrementTodayMinutes,
+  incrementTodayActivities,
+  updateStreak,
+  fetchDashboard,
+  fetchWeeklyReport,
+  fetchStreak,
+  updateProgress
+} from './progressSlice';
+
+// Schedule actions
+export {
+  clearError as clearScheduleError,
+  setTodaySchedule,
+  setNextActivity,
+  markReviewCompleted,
+  updateGoalProgress,
+  clearNextActivity,
+  fetchTodaySchedule,
+  fetchWeekSchedule,
+  fetchNextActivity,
+  completeReview
+} from './scheduleSlice';
 
 export default store;

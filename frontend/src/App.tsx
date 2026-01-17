@@ -2,58 +2,137 @@
  * App Component
  * Main application component with routing and Redux provider
  */
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { store } from './store';
+import { store, useAppSelector } from './store';
 import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import Onboarding from './pages/Onboarding';
+import Assessment from './pages/Assessment';
 
-// Temporary user ID for development - will be replaced with auth
-const DEFAULT_USER_ID = 'dev-user-001';
+// Protected Route Component
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
 
-const App: FC = () => {
-  // In a real app, this would come from authentication
-  const [userId] = useState(DEFAULT_USER_ID);
+const ProtectedRoute: FC<ProtectedRouteProps> = ({ children }) => {
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Redirect to assessment if not completed
+  if (user && !user.initialAssessmentCompleted) {
+    return <Navigate to="/assessment" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+// Auth Route Component (redirect if already authenticated)
+interface AuthRouteProps {
+  children: React.ReactNode;
+}
+
+const AuthRoute: FC<AuthRouteProps> = ({ children }) => {
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+
+  if (isAuthenticated) {
+    // Redirect to assessment if not completed, otherwise to dashboard
+    if (user && !user.initialAssessmentCompleted) {
+      return <Navigate to="/assessment" replace />;
+    }
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+// Main App with Routes
+const AppRoutes: FC = () => {
+  const { user } = useAppSelector((state) => state.auth);
+  const userId = user?.id || 'guest';
 
   return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          {/* Dashboard Route */}
-          <Route path="/" element={<Dashboard userId={userId} />} />
-          <Route path="/dashboard" element={<Dashboard userId={userId} />} />
+    <Routes>
+      {/* Auth Routes */}
+      <Route
+        path="/login"
+        element={
+          <AuthRoute>
+            <Login />
+          </AuthRoute>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <AuthRoute>
+            <Onboarding />
+          </AuthRoute>
+        }
+      />
 
-          {/* Placeholder routes for other pages */}
-          <Route
-            path="/vocabulary"
-            element={
-              <PlaceholderPage title="Vocabulário" description="Página de exercícios de vocabulário" />
-            }
-          />
-          <Route
-            path="/grammar"
-            element={
-              <PlaceholderPage title="Gramática" description="Página de lições de gramática" />
-            }
-          />
-          <Route
-            path="/pronunciation"
-            element={
-              <PlaceholderPage title="Pronúncia" description="Página de exercícios de pronúncia" />
-            }
-          />
-          <Route
-            path="/speaking"
-            element={
-              <PlaceholderPage title="Conversação" description="Página de prática de conversação" />
-            }
-          />
+      {/* Assessment Route */}
+      <Route path="/assessment" element={<Assessment />} />
 
-          {/* Redirect unknown routes to dashboard */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </Provider>
+      {/* Protected Routes */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Dashboard userId={userId} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard userId={userId} />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Pillar Routes */}
+      <Route
+        path="/vocabulary"
+        element={
+          <ProtectedRoute>
+            <PlaceholderPage title="Vocabulário" description="Página de exercícios de vocabulário" />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/grammar"
+        element={
+          <ProtectedRoute>
+            <PlaceholderPage title="Gramática" description="Página de lições de gramática" />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/pronunciation"
+        element={
+          <ProtectedRoute>
+            <PlaceholderPage title="Pronúncia" description="Página de exercícios de pronúncia" />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/speaking"
+        element={
+          <ProtectedRoute>
+            <PlaceholderPage title="Conversação" description="Página de prática de conversação" />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Redirect unknown routes to login (or dashboard if authenticated) */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   );
 };
 
@@ -71,13 +150,24 @@ const PlaceholderPage: FC<PlaceholderPageProps> = ({ title, description }) => {
           <h2 className="card-title text-2xl justify-center">{title}</h2>
           <p className="text-base-content/70">{description}</p>
           <div className="card-actions justify-center mt-4">
-            <a href="/" className="btn btn-primary">
+            <a href="/dashboard" className="btn btn-primary">
               Voltar ao Dashboard
             </a>
           </div>
         </div>
       </div>
     </div>
+  );
+};
+
+// Main App Component
+const App: FC = () => {
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </Provider>
   );
 };
 

@@ -103,10 +103,11 @@ from app.api.v1.endpoints import grammar
 from app.api.v1.endpoints import pronunciation
 from app.api.v1.endpoints import speaking
 from app.api.v1.endpoints import progress
-# TODO: Uncomment as endpoints are implemented
-# from app.api.v1.endpoints import users, assessment
-# app.include_router(users.router, prefix=f"{settings.API_V1_PREFIX}/users", tags=["users"])
-# app.include_router(assessment.router, prefix=f"{settings.API_V1_PREFIX}/assessment", tags=["assessment"])
+from app.api.v1.endpoints import users
+from app.api.v1.endpoints import assessment
+
+app.include_router(users.router, prefix=f"{settings.API_V1_PREFIX}/users", tags=["users"])
+app.include_router(assessment.router, prefix=f"{settings.API_V1_PREFIX}/assessment", tags=["assessment"])
 app.include_router(vocabulary.router, prefix=f"{settings.API_V1_PREFIX}/vocabulary", tags=["vocabulary"])
 app.include_router(grammar.router, prefix=f"{settings.API_V1_PREFIX}/grammar", tags=["grammar"])
 app.include_router(pronunciation.router, prefix=f"{settings.API_V1_PREFIX}/pronunciation", tags=["pronunciation"])

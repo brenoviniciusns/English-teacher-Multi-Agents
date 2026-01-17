@@ -4,16 +4,139 @@
 
 // ==================== USER TYPES ====================
 
+export interface UserProfile {
+  learningGoals: string[];
+  nativeLanguage: string;
+  preferredStudyTime: string;
+  dailyGoalMinutes: number;
+  notificationsEnabled: boolean;
+  voicePreference: string;
+}
+
 export interface User {
   id: string;
   email: string;
   name: string;
   currentLevel: 'beginner' | 'intermediate';
-  nativeLanguage: string;
-  learningGoals: string[];
-  dailyGoalMinutes: number;
-  createdAt: string;
+  profile: UserProfile;
+  totalStudyTimeMinutes: number;
+  currentStreakDays: number;
+  vocabularyScore: number;
+  grammarScore: number;
+  pronunciationScore: number;
+  speakingScore: number;
+  initialAssessmentCompleted: boolean;
+  nativeLanguage?: string;
+  learningGoals?: string[];
+  dailyGoalMinutes?: number;
+  createdAt?: string;
   lastActivityDate?: string;
+}
+
+export interface UserRegistration {
+  email: string;
+  password: string;
+  name: string;
+  profile?: Partial<UserProfile>;
+}
+
+export interface UserLogin {
+  email: string;
+  password: string;
+}
+
+export interface AuthToken {
+  accessToken: string;
+  tokenType: string;
+  user: User;
+}
+
+// ==================== ASSESSMENT TYPES ====================
+
+export interface VocabularyAssessmentItem {
+  word: string;
+  difficulty: number;
+}
+
+export interface GrammarAssessmentItem {
+  id: string;
+  rule: string;
+  example: string;
+  question: string;
+}
+
+export interface PronunciationAssessmentItem {
+  id: string;
+  phoneme: string;
+  words: string[];
+  difficulty: string;
+}
+
+export interface AssessmentStepContent {
+  type: string;
+  items?: VocabularyAssessmentItem[] | GrammarAssessmentItem[] | PronunciationAssessmentItem[];
+  prompts?: string[];
+  instructions: string;
+}
+
+export interface AssessmentStart {
+  assessmentId: string;
+  assessmentType: 'initial' | 'continuous';
+  step: number;
+  stepName: string;
+  totalSteps: number;
+  content: AssessmentStepContent;
+  instructions: string;
+}
+
+export interface AssessmentAnswer {
+  id?: string;
+  answer: string;
+  correct?: boolean;
+}
+
+export interface AssessmentSubmitResponse {
+  assessmentId: string;
+  stepCompleted: number;
+  stepName: string;
+  stepScore: number;
+  nextStep?: number;
+  nextStepName?: string;
+  nextContent?: AssessmentStepContent;
+  isComplete: boolean;
+}
+
+export interface PillarScores {
+  vocabulary: number;
+  grammar: number;
+  pronunciation: number;
+  speaking: number;
+}
+
+export interface AssessmentResult {
+  assessmentId: string;
+  assessmentType: 'initial' | 'continuous';
+  scores: PillarScores;
+  overallScore: number;
+  determinedLevel: 'beginner' | 'intermediate';
+  previousLevel?: string;
+  levelChanged: boolean;
+  weakestPillar: string;
+  recommendations: string[];
+  message: string;
+  completedAt?: string;
+}
+
+export interface AssessmentStatus {
+  hasActiveAssessment: boolean;
+  assessmentId?: string;
+  assessmentType?: 'initial' | 'continuous';
+  currentStep?: number;
+  totalSteps?: number;
+  stepScores?: Record<string, number>;
+  initialAssessmentCompleted: boolean;
+  lastAssessmentDate?: string;
+  sessionsSinceLastAssessment?: number;
 }
 
 // ==================== PROGRESS TYPES ====================
@@ -187,6 +310,23 @@ export interface ApiError {
 
 // ==================== REDUX STATE TYPES ====================
 
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+  error: string | null;
+}
+
+export interface AssessmentState {
+  currentAssessment: AssessmentStart | null;
+  assessmentResult: AssessmentResult | null;
+  assessmentStatus: AssessmentStatus | null;
+  currentAnswers: AssessmentAnswer[];
+  loading: boolean;
+  error: string | null;
+}
+
 export interface ProgressState {
   overallProgress: OverallProgress | null;
   weeklyReport: WeeklyReport | null;
@@ -204,6 +344,8 @@ export interface ScheduleState {
 }
 
 export interface AppState {
+  auth: AuthState;
+  assessment: AssessmentState;
   progress: ProgressState;
   schedule: ScheduleState;
 }

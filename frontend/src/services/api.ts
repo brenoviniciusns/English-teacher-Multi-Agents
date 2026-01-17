@@ -12,7 +12,17 @@ import type {
   NextActivity,
   ProgressUpdate,
   ProgressUpdateResponse,
-  StreakInfo
+  StreakInfo,
+  User,
+  UserRegistration,
+  UserLogin,
+  AuthToken,
+  UserProfile,
+  AssessmentStart,
+  AssessmentSubmitResponse,
+  AssessmentResult,
+  AssessmentStatus,
+  AssessmentAnswer
 } from '../types';
 
 // API base URL from environment
@@ -345,8 +355,117 @@ export const speakingApi = {
   }
 };
 
+// ==================== AUTH API ====================
+
+export const authApi = {
+  /**
+   * Register a new user
+   */
+  register: async (data: UserRegistration): Promise<AuthToken> => {
+    const response = await apiClient.post('/users/register', {
+      email: data.email,
+      password: data.password,
+      name: data.name,
+      profile: data.profile
+    });
+    return toCamelCase(response.data) as unknown as AuthToken;
+  },
+
+  /**
+   * Login user
+   */
+  login: async (credentials: UserLogin): Promise<AuthToken> => {
+    const response = await apiClient.post('/users/login', {
+      email: credentials.email,
+      password: credentials.password
+    });
+    return toCamelCase(response.data) as unknown as AuthToken;
+  },
+
+  /**
+   * Get current user profile
+   */
+  getCurrentUser: async (): Promise<User> => {
+    const response = await apiClient.get('/users/me');
+    return toCamelCase(response.data) as unknown as User;
+  },
+
+  /**
+   * Update user profile
+   */
+  updateProfile: async (profile: Partial<UserProfile>): Promise<User> => {
+    const response = await apiClient.put('/users/me', profile);
+    return toCamelCase(response.data) as unknown as User;
+  },
+
+  /**
+   * Logout (client-side only)
+   */
+  logout: (): void => {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user');
+  }
+};
+
+// ==================== ASSESSMENT API ====================
+
+export const assessmentApi = {
+  /**
+   * Start a new assessment
+   */
+  start: async (assessmentType = 'initial'): Promise<AssessmentStart> => {
+    const response = await apiClient.post('/assessment/start', {
+      assessment_type: assessmentType
+    });
+    return toCamelCase(response.data) as unknown as AssessmentStart;
+  },
+
+  /**
+   * Submit answers for an assessment step
+   */
+  submitAnswers: async (
+    assessmentId: string,
+    step: number,
+    stepName: string,
+    answers: AssessmentAnswer[]
+  ): Promise<AssessmentSubmitResponse> => {
+    const response = await apiClient.post('/assessment/submit', {
+      assessment_id: assessmentId,
+      step,
+      step_name: stepName,
+      answers
+    });
+    return toCamelCase(response.data) as unknown as AssessmentSubmitResponse;
+  },
+
+  /**
+   * Get assessment result
+   */
+  getResult: async (assessmentId: string): Promise<AssessmentResult> => {
+    const response = await apiClient.get(`/assessment/result/${assessmentId}`);
+    return toCamelCase(response.data) as unknown as AssessmentResult;
+  },
+
+  /**
+   * Get current assessment status
+   */
+  getStatus: async (): Promise<AssessmentStatus> => {
+    const response = await apiClient.get('/assessment/status');
+    return toCamelCase(response.data) as unknown as AssessmentStatus;
+  },
+
+  /**
+   * Cancel an active assessment
+   */
+  cancel: async (assessmentId: string): Promise<void> => {
+    await apiClient.delete(`/assessment/${assessmentId}`);
+  }
+};
+
 // Export default API object
 export default {
+  auth: authApi,
+  assessment: assessmentApi,
   progress: progressApi,
   schedule: scheduleApi,
   vocabulary: vocabularyApi,
