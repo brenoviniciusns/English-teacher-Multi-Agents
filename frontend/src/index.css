@@ -1,0 +1,76 @@
+/**
+ * Main CSS File
+ * Tailwind CSS imports and custom styles
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  /* Custom card hover effect */
+  .card-hover {
+    @apply transition-transform duration-200 hover:scale-[1.02];
+  }
+
+  /* Progress bar animation */
+  .progress-animated {
+    animation: progress-animation 1s ease-out;
+  }
+
+  @keyframes progress-animation {
+    from {
+      width: 0;
+    }
+  }
+
+  /* Streak fire animation */
+  .streak-fire {
+    animation: fire-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes fire-pulse {
+    0%, 100% {
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    50% {
+      transform: scale(1.1);
+      filter: brightness(1.2);
+    }
+  }
+}
+
+/* Recharts custom styles */
+.recharts-wrapper {
+  font-size: 12px;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* Loading skeleton animation */
+.skeleton {
+  @apply bg-base-300 animate-pulse rounded;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-base-200 rounded;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-base-300 rounded hover:bg-base-content/30;
+}
